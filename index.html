@@ -1,11 +1,10 @@
-
 <!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#13261f" />
-  <title>测测你的灵魂对应哪位中国历史人物</title>
+  <title>灵魂测试广场｜城市与历史趣味人格测试</title>
   <style>
     :root {
       --ink: #14231d;
@@ -49,6 +48,20 @@
     .history-wheel { min-height: 150px; position: relative; display: grid; place-items: center; color: var(--gold); border: 1px solid rgba(36,117,104,.2); background: rgba(36,117,104,.055); }
     .history-wheel::before { content: ""; position: absolute; width: 112px; height: 112px; border: 1px solid currentColor; border-radius: 50%; box-shadow: 0 0 0 14px rgba(216,173,97,.08), 0 0 0 29px rgba(216,173,97,.045); }
     .history-wheel span { z-index: 1; color: var(--jade); font-size: 2.7rem; letter-spacing: .1em; }
+    .hall-card { max-width: 1100px; }
+    .hall-intro { max-width: 680px; margin-bottom: 26px; }
+    .direction-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 20px 0 24px; }
+    .direction-window { position: relative; min-height: 238px; padding: 23px; overflow: hidden; border: 1px solid rgba(126,101,54,.28); border-radius: 16px 4px 16px 4px; background: linear-gradient(135deg, rgba(255,255,255,.68), rgba(239,230,210,.68)); }
+    .direction-window::after { content: attr(data-window); position: absolute; right: 13px; top: 7px; color: rgba(142,57,65,.10); font-family: Georgia, serif; font-size: 4.6rem; font-weight: 700; line-height: 1; }
+    .direction-window h2 { position: relative; z-index: 1; margin: 0 0 7px; color: var(--deep); font-size: clamp(1.2rem, 3vw, 1.45rem); }
+    .direction-window p { position: relative; z-index: 1; margin-bottom: 13px; color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: .86rem; }
+    .direction-list { position: relative; z-index: 1; display: grid; gap: 7px; padding: 0; margin: 0; list-style: none; }
+    .direction-btn { width: 100%; min-height: 31px; padding: 5px 9px; color: #29493f; border: 0; border-left: 2px solid rgba(36,117,104,.32); background: rgba(36,117,104,.055); text-align: left; font-family: inherit; font-size: .92rem; line-height: 1.45; transition: .18s; }
+    .direction-btn:hover { padding-left: 13px; color: #fff; border-left-color: var(--gold); background: var(--jade); }
+    .direction-btn.live { color: #fff8e9; border-left-color: var(--gold); background: var(--jade); font-weight: 700; }
+    .direction-btn.ready { color: #176050; border-left-color: var(--jade); background: rgba(36,117,104,.13); font-weight: 700; }
+    .direction-btn.ready::after { content: "已上线"; float: right; color: var(--wine); font-family: ui-sans-serif, system-ui, sans-serif; font-size: .69rem; letter-spacing: .04em; }
+    .hall-note { margin: 0; color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: .85rem; line-height: 1.6; }
     .cta, .secondary { border: 0; border-radius: 5px; min-height: 52px; padding: 0 27px; transition: transform .2s, box-shadow .2s, background .2s; }
     .cta { color: #fff8e9; background: linear-gradient(105deg, var(--jade), #1d574d); box-shadow: 0 10px 23px rgba(16,74,62,.24); font-weight: 700; letter-spacing: .08em; }
     .cta:hover { transform: translateY(-2px); box-shadow: 0 15px 28px rgba(16,74,62,.31); }
@@ -93,24 +106,27 @@
     .share-tip { align-self: center; color: #6e756e; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .83rem; }
     .toast { position: fixed; z-index: 5; left: 50%; bottom: 25px; padding: 12px 18px; color: white; border-radius: 99px; background: rgba(12,28,23,.93); box-shadow: 0 8px 28px rgba(0,0,0,.25); font-family: ui-sans-serif, system-ui, sans-serif; font-size: .9rem; transform: translate(-50%, 100px); opacity: 0; transition: .35s; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
-    @media (max-width: 600px) { .app { padding-inline: 13px; } .paper-card { border-radius: 20px 4px 20px 4px; } .home-grid, .result-grid { grid-template-columns: 1fr; } .history-wheel { min-height: 116px; } .question-card { min-height: 0; } .result-block.wide { grid-column: auto; } .result-header { gap: 14px; } .avatar { width: 75px; height: 75px; font-size: 2.15rem; } .result-actions { display: grid; } .share-tip { text-align: center; } }
+    @media (max-width: 600px) { .app { padding-inline: 13px; } .paper-card { border-radius: 20px 4px 20px 4px; } .home-grid, .result-grid, .direction-grid { grid-template-columns: 1fr; } .history-wheel { min-height: 116px; } .question-card { min-height: 0; } .result-block.wide { grid-column: auto; } .result-header { gap: 14px; } .avatar { width: 75px; height: 75px; font-size: 2.15rem; } .result-actions { display: grid; } .share-tip { text-align: center; } .direction-window { min-height: 0; padding: 20px; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
 </head>
 <body>
   <main class="app">
     <section id="home" class="screen active" aria-labelledby="home-title">
-      <div class="paper-card">
+      <div class="paper-card hall-card">
         <div class="seal" aria-hidden="true">灵魂</div>
-        <p class="eyebrow">40 QUESTIONS · A FUN PERSONALITY QUIZ</p>
-        <h1 id="home-title">测测你的灵魂<br>对应哪位中国历史人物</h1>
-        <p class="lead">不是历史考试，也不定义你的未来。跟随直觉选出更像你的日常，看看哪一位穿越千年的灵魂，和你最有共鸣。</p>
-        <div class="home-grid">
-          <div class="promise">从处事方式、社交模式、压力反应到小小偏好，拼出你的「气质侧写」。约 5 分钟，结果页已为分享而生。</div>
-          <div class="history-wheel" aria-hidden="true"><span>问心</span></div>
+        <p class="eyebrow">TESTING HALL · 30 DIRECTIONS</p>
+        <h1 id="home-title">你的灵魂测试广场</h1>
+        <p class="lead hall-intro">从城市气质到恋爱关系，从古风身份到人生主线，用轻松的单选题，翻开每一种有趣的你。</p>
+        <div class="direction-grid">
+          <article class="direction-window" data-window="01"><h2>城市类测试</h2><p>寻找与你同频的城市坐标</p><ul class="direction-list"><li><button class="direction-btn ready city-btn" data-city-quiz="hometown" type="button">你的灵魂老家在哪座城市</button></li><li><button class="direction-btn ready city-btn" data-city-quiz="settle" type="button">哪座城市最适合你定居</button></li><li><button class="direction-btn ready city-btn" data-city-quiz="lover" type="button">你的宿命恋人来自哪个城市</button></li><li><button class="direction-btn ready city-btn" data-city-quiz="northsouth" type="button">骨子里是南方还是北方人格</button></li><li><button class="direction-btn ready city-btn" data-city-quiz="vibe" type="button">哪座城市和你的气质天生相合</button></li></ul></article>
+          <article class="direction-window" data-window="02"><h2>历史古风类</h2><p>穿过千年，领取你的古风档案</p><ul class="direction-list"><li><button id="start-btn" class="direction-btn live" type="button">测你对应哪位中国历史人物 · 已上线</button></li><li><button class="direction-btn" type="button">你在古代是什么身份</button></li><li><button class="direction-btn" type="button">你在仙侠世界是什么角色</button></li><li><button class="direction-btn" type="button">你的古代天赋技能</button></li><li><button class="direction-btn" type="button">你在古代会拥有什么人生剧本</button></li></ul></article>
+          <article class="direction-window" data-window="03"><h2>恋爱情感类</h2><p>看见关系里的心动与默契</p><ul class="direction-list"><li><button class="direction-btn ready quiz-btn" data-quiz="lovePersonality" type="button">测你的恋爱人格</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="loveAttract" type="button">你容易吸引什么样的恋人</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="loveFlaw" type="button">你的恋爱隐藏短板</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="loveCouple" type="button">情侣适配度测试</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="loveScript" type="button">你的理想恋爱剧本</button></li></ul></article>
+          <article class="direction-window" data-window="04"><h2>人格天赋类</h2><p>挖掘你的底色、潜能和赛道</p><ul class="direction-list"><li><button class="direction-btn ready quiz-btn" data-quiz="talentHidden" type="button">你的隐藏天赋测试</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="talentSin" type="button">七宗罪人格测试</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="talentColor" type="button">你的性格底色测试</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="talentTrack" type="button">你的天赋适合什么赛道</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="talentSubconscious" type="button">你的潜意识人格</button></li></ul></article>
+          <article class="direction-window" data-window="05"><h2>情绪娱乐类</h2><p>给日常一点轻盈又好玩的注脚</p><ul class="direction-list"><li><button class="direction-btn ready quiz-btn" data-quiz="funStory" type="button">你的人生隐藏剧本</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="funAnimal" type="button">你是什么小动物人格</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="funVibe" type="button">你的专属氛围感标签</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="funPace" type="button">你适合什么样的生活节奏</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="funMission" type="button">你的人生主线任务测试</button></li></ul></article>
+          <article class="direction-window" data-window="06"><h2>灵魂盲盒</h2><p>还没想好？让今天的直觉替你挑选</p><ul class="direction-list"><li><button class="direction-btn ready quiz-btn" data-quiz="boxRandom" type="button">随机抽取一个测试方向</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="boxToday" type="button">今天最适合测什么</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="boxWeek" type="button">你的本周能量关键词</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="boxShare" type="button">适合分享给朋友的测试</button></li><li><button class="direction-btn ready quiz-btn" data-quiz="boxNight" type="button">夜晚专属的灵魂问题</button></li></ul></article>
         </div>
-        <button id="start-btn" class="cta" type="button">启程，寻找灵魂同频者</button>
-        <p class="small-note">共 40 题 · 单选 · 凭第一反应即可 · 仅供趣味娱乐</p>
+        <p class="hall-note">六大窗口现有 26 套测试可直接体验；古风类其余 4 套将持续解锁。</p>
       </div>
     </section>
 
@@ -137,25 +153,32 @@
           <section class="result-block wide"><h3>灵魂匹配理由</h3><p id="result-reason"></p></section>
           <section class="result-block wide"><h3>趣味彩蛋</h3><p id="result-easter"></p></section>
         </div>
-        <div class="result-actions"><button id="restart-btn" class="cta" type="button">再测一次</button><button id="share-btn" class="secondary" type="button">复制分享文案</button><span class="share-tip">长按或截图，分享你的灵魂档案</span></div>
+        <div class="result-actions"><button id="restart-btn" class="cta" type="button">再测一次</button><button id="hall-btn" class="secondary" type="button">返回测试广场</button><button id="share-btn" class="secondary" type="button">复制分享文案</button><span class="share-tip">长按或截图，分享你的灵魂档案</span></div>
       </article>
     </section>
   </main>
   <div id="toast" class="toast" role="status"></div>
 
   <script>
-    // 七个维度：strategy 谋略、leadership 帝王格局、culture 文人气质、chivalry 侠义、poetry 感性、courage 将略、retreat 隐逸。
+    // 七组人格光谱、十四位人物：同一核心特质会再由答题场景细分为两种气质，避免把人简单归进单一标签。
     const people = {
       strategy: { name: '诸葛亮', role: '谋士 · 定局之智', avatar: '亮', tags: ['冷静筹谋', '责任感强', '全局意识'], quote: '你不是没有情绪，只是总把答案准备在情绪之前。', strength: '能把一团乱麻拆成可走的步骤。关键时刻，别人会自然等你说“先这样办”。', reason: '你的选择里既有预判，也有耐心。你习惯为未来多想一步，愿意把复杂留给自己、把清晰留给伙伴。', easter: '如果朋友临时问你“怎么办”，你可能已经在脑中排好了 A、B、C 三套方案。' },
+      tactics: { name: '张良', role: '谋略家 · 从容之局', avatar: '良', tags: ['洞察人心', '借势而为', '进退有度'], quote: '你不抢着成为焦点，却常常看见别人没看见的那一步。', strength: '擅长从人和局势中找到杠杆点。你不迷信蛮力，总能把复杂关系理成顺势可走的路。', reason: '你的选择显示出冷静的判断和弹性的处事方式。比起硬碰硬，你更相信看清时机、选对位置。', easter: '你心里大概常有一句潜台词：先别急，看看这件事真正的关键在哪里。' },
       leadership: { name: '唐太宗李世民', role: '帝王 · 开局之魄', avatar: '世', tags: ['果断担当', '识人用人', '开阔格局'], quote: '你要的从来不是赢一回，而是一起把路走得更远。', strength: '天然会把人和资源放到合适的位置，让一群人愿意朝着同一个方向使劲。', reason: '你看重结果，也在意人心。面对难题时，你愿意拍板、也愿意听不同的声音，这份担当让你很有主心骨。', easter: '你的理想团建不是做游戏，而是“各自发挥，然后把漂亮的仗打下来”。' },
+      authority: { name: '武则天', role: '掌局者 · 定势之锋', avatar: '曌', tags: ['气场坚定', '判断独立', '敢担结果'], quote: '你不等别人替你定义位置，你会亲手把位置坐稳。', strength: '在压力和质疑中仍能保持决断。你能看见规则，也有能力在必要时重写自己的行动规则。', reason: '你在选择中反复表现出强烈的主体感：愿意负责、不回避难题，也不轻易把命运交给环境。', easter: '别人还在讨论“该不该开始”，你已经在心里列好了启动条件。' },
       culture: { name: '苏轼', role: '文人 · 旷达之心', avatar: '轼', tags: ['豁达通透', '有趣有料', '审美在线'], quote: '人生有风雨，你却总能从雨声里听出一点诗意。', strength: '能把寻常日子过出滋味，在低潮中保留幽默和创造力，让身边的人也松一口气。', reason: '你的答案透露着好奇、包容和生活感。你并非永远乐观，而是很懂得把不可控的事，酿成自己的体验。', easter: '你大概相信：再难的日子，也值得认真吃一顿、看一次月亮。' },
+      insight: { name: '王阳明', role: '心学家 · 知行之笃', avatar: '明', tags: ['内心笃定', '反思力强', '说做一致'], quote: '你真正相信的答案，往往要亲自走过才算数。', strength: '能在外界噪音里回到内心的判断，并把想清楚的事落到行动。你的稳定来自清楚自己为何而做。', reason: '你并不满足于漂亮的观点，更在意是否真实、是否能实践。你会反省，也能在确认方向后坚定前行。', easter: '你的待办清单里，也许藏着一句无声的备注：想明白了，就去做。' },
       chivalry: { name: '李白', role: '侠客 · 自由之刃', avatar: '白', tags: ['率真热烈', '向往自由', '重情重义'], quote: '你心里有一把剑，也有一片装得下星河的酒。', strength: '敢于跳出既定路线。你的热情会点亮人群，也能在他人犹豫时给出“去试试看”的勇气。', reason: '你对真诚与自由格外敏感，不爱被规训成标准答案。哪怕绕点远路，也想活得痛快、爱得坦荡。', easter: '一份突如其来的旅行邀请，最容易让你把“考虑一下”变成“什么时候出发”。' },
+      blazing: { name: '霍去病', role: '少年将星 · 破阵之速', avatar: '病', tags: ['目标感强', '大胆直接', '不惧未知'], quote: '路再远，也不如你决定出发的那一刻锋利。', strength: '行动启动得很快，面对陌生挑战时反而容易被点燃。你能把“想试试”迅速变成一个干脆的开始。', reason: '你的回答里有对突破和远方的渴望。你不喜欢把热情耗在犹豫里，认定方向便愿意先冲出去。', easter: '对你而言，“新手保护期”更像一句邀请：正好，去试一把。' },
       poetry: { name: '李清照', role: '诗人 · 玲珑之感', avatar: '清', tags: ['细腻敏锐', '情感丰沛', '韧性温柔'], quote: '你把风吹过窗棂的声音，也记成了自己的一段故事。', strength: '细节捕捉力极强，懂得体谅人未说出口的心事；温柔不是软弱，而是你深刻的感知力。', reason: '你的选择更在意感受、氛围与真心。你愿意认真对待每一份关系，也有在安静处慢慢长出的力量。', easter: '你可能有一个“只对自己有意义”的小物件，别人不懂，你却舍不得丢。' },
+      heroic: { name: '辛弃疾', role: '词人 · 热血之志', avatar: '弃', tags: ['情感炽烈', '理想不灭', '外柔内刚'], quote: '你把没说完的话，酿成了继续向前的力气。', strength: '情绪不是你的包袱，而是燃料。你能把遗憾、热爱和不甘转化为更深的投入与表达。', reason: '你既有细腻的感受，也有不愿向现实轻易低头的劲。越是在被触动的时刻，越能看见你的韧性。', easter: '你收藏的那句歌词、那部电影，可能在某个深夜给过你重新出发的力量。' },
       courage: { name: '岳飞', role: '将领 · 守正之勇', avatar: '飞', tags: ['坚定可靠', '行动果敢', '原则清晰'], quote: '你不轻易许诺，但答应过的事，风雨也会赶到。', strength: '执行力与抗压能力很出色。越是在关键节点，你越能稳住阵脚，用行动替代空话。', reason: '你偏向直接、可靠和有原则的选择。你不一定高声表达，但会把重要的人与事，放在行动的优先级里。', easter: '你的“我来”通常不是客气话，而是一份默认会做到的承诺。' },
-      retreat: { name: '陶渊明', role: '隐士 · 自在之境', avatar: '潜', tags: ['清醒自洽', '边界分明', '返璞归真'], quote: '不是躲开人间，是你知道什么才值得留在心间。', strength: '不被外界节奏轻易带跑。你能建立自己的秩序，在纷杂中保有稳定、质朴又长久的能量。', reason: '你的答案里有对内心节奏的尊重。比起热闹的标签，你更在意是否舒服、真实，以及日子能不能长出根。', easter: '对你来说，取消一场不想去的聚会，可能比抢到热门演出门票更有幸福感。' }
+      defense: { name: '戚继光', role: '实干将领 · 练兵之稳', avatar: '继', tags: ['务实耐心', '系统执行', '守护意识'], quote: '真正的底气，不在一时逞强，而在日日准备。', strength: '擅长把难题拆成可训练、可复盘的步骤。你不迷恋一招制胜，却能靠耐心把能力练到可靠。', reason: '你的选择显示出务实与责任感。你愿意守住细节、打牢基础，也能在关键时刻成为值得托付的人。', easter: '你可能会把“先练熟再上场”说得很平静，但最后往往最让人放心。' },
+      retreat: { name: '陶渊明', role: '隐士 · 自在之境', avatar: '潜', tags: ['清醒自洽', '边界分明', '返璞归真'], quote: '不是躲开人间，是你知道什么才值得留在心间。', strength: '不被外界节奏轻易带跑。你能建立自己的秩序，在纷杂中保有稳定、质朴又长久的能量。', reason: '你的答案里有对内心节奏的尊重。比起热闹的标签，你更在意是否舒服、真实，以及日子能不能长出根。', easter: '对你来说，取消一场不想去的聚会，可能比抢到热门演出门票更有幸福感。' },
+      unbound: { name: '嵇康', role: '名士 · 不羁之音', avatar: '康', tags: ['精神独立', '审美坚持', '不随波逐流'], quote: '你不急着合群，你更在意灵魂有没有自己的回响。', strength: '拥有清晰的精神边界和独特的审美判断。你能在热闹之外保留自我，也敢拒绝不合心意的标准答案。', reason: '你的选择流露出不愿迎合的清醒。你重视内在自由，不因旁人的期待轻易放弃自己的节奏与表达。', easter: '当所有人都在追同一个热点时，你可能正安静地把手机调成勿扰。' }
     };
 
-    const questions = [
+    let questions = [
       ['周末难得空下来，你最想怎样安排？', [['提前排好轻松但充实的清单','strategy'], ['约三两好友，做件有意义的事','leadership'], ['去一家有氛围的小店慢慢坐着','culture'], ['临时起意，去没去过的地方','chivalry']]],
       ['团队项目突然卡住时，你第一反应是？', [['先梳理问题，找出关键卡点','strategy'], ['把大家召集起来，明确下一步','leadership'], ['先稳住气氛，再想新点子','culture'], ['直接上手试一个突破口','courage']]],
       ['朋友向你倾诉很难过的事，你通常会？', [['帮他分析来龙去脉和可行方案','strategy'], ['认真听完，替他守住秘密','poetry'], ['带他去做点开心的事换换心情','chivalry'], ['用朴实的陪伴让他慢慢缓过来','retreat']]],
@@ -198,6 +221,153 @@
       ['最后一题：此刻最贴近你的心愿是？', [['把人生这盘棋，下得更明白','strategy'], ['和重要的人一起成就些事','leadership'], ['去更大更自由的世界看看','chivalry'], ['把每一天过成自己喜欢的样子','poetry']]]
     ];
 
+    const historicalQuestions = questions;
+
+    // 城市类的五个方向共用同一组生活化城市偏好题，但会以不同的城市结果库和权重计算结果。
+    // 六个维度分别是：秩序感、温度感、自由感、进取心、故事感、活力感。
+    const cityQuestions = [
+      ['难得拥有一个完全自由的早晨，你最想怎么开始？', [['按计划吃一顿舒服的早餐，再处理待办','order'], ['慢慢做饭，顺便和家人朋友聊聊天','warmth'], ['不设闹钟，醒了就去附近随便走走','freedom'], ['一早去运动或试一家新店，把一天点燃','vitality']]],
+      ['第一次走进一座陌生城市，你最先寻找的是？', [['交通和生活设施是否方便顺手','order'], ['烟火气浓的小巷、菜场或街边摊','warmth'], ['能看见天空、海边或山的开阔处','freedom'], ['最有城市能量的商圈、展览或地标','ambition']]],
+      ['理想的居住区，最该拥有哪种气质？', [['安静整洁，节奏可预期','order'], ['邻里友好，出门就有人情味','warmth'], ['离自然很近，随时能透口气','freedom'], ['新鲜、密集，每天都有新变化','vitality']]],
+      ['加班后终于下班，你最可能怎样犒劳自己？', [['回家收拾一下，好好睡一觉','order'], ['找熟悉的人吃顿热乎的饭','warmth'], ['一个人散步，把手机调成静音','freedom'], ['去看场电影或在夜色里逛逛','vitality']]],
+      ['旅行时，你更喜欢怎样安排行程？', [['提前做好攻略，时间不浪费','order'], ['跟当地人聊聊，找真正好吃的地方','warmth'], ['只定第一晚住处，其他交给心情','freedom'], ['把热门体验都排进日程，玩到尽兴','ambition']]],
+      ['一间小店最打动你的地方是？', [['服务和细节做得极其妥帖','order'], ['老板记得你的口味，像熟人一样招呼','warmth'], ['有窗、有风，坐多久都不被催','freedom'], ['有故事、有旧物，能让人慢下来','depth']]],
+      ['面对一个很难但很有前景的机会，你会？', [['先评估成本和路径，再决定要不要上','order'], ['问问重要的人，看看能否彼此支持','warmth'], ['只要内心想去，就给自己一次尝试','freedom'], ['立刻行动，竞争里才更有机会','ambition']]],
+      ['你最喜欢的城市画面是？', [['清晨准时启动的街道和地铁','order'], ['傍晚热气腾腾的饭馆与聊天声','warmth'], ['海边、山路或树影下的长椅','freedom'], ['灯火通明的高楼与人流','ambition']]],
+      ['朋友临时取消约会，你的第一反应是？', [['正好，把原本的计划推进一下','order'], ['先问问他是不是遇到了什么事','warmth'], ['那就一个人去，反而更自在','freedom'], ['马上找个新去处，不让晚上空掉','vitality']]],
+      ['如果有一笔额外预算，你会优先花在？', [['改善居住和生活效率','order'], ['请家人朋友吃饭或准备礼物','warmth'], ['一次不赶时间的旅行','freedom'], ['学习、设备或提升自己的机会','ambition']]],
+      ['周末的你更可能出现在？', [['家里整理、阅读或完成个人计划','order'], ['菜市场、老街或朋友家的饭桌','warmth'], ['公园、露营地或一条陌生小路','freedom'], ['旧书店、博物馆或一条有年头的街','depth']]],
+      ['你希望工作给生活带来什么？', [['稳定节奏和可掌控的成长','order'], ['能照顾自己，也照顾到身边的人','warmth'], ['更多选择权，不被地点束缚','freedom'], ['更大的舞台和不断升级的可能','ambition']]],
+      ['别人眼中的你，最接近哪种形容？', [['靠谱、细致、让人放心','order'], ['好相处、有温度、很会照顾人','warmth'], ['松弛、真诚、活得有自己的节奏','freedom'], ['有冲劲、反应快、总在尝试新东西','vitality']]],
+      ['与一群不熟的人共处时，你通常会？', [['先观察规则和分工，再自然加入','order'], ['主动让气氛舒服，不让谁尴尬','warmth'], ['保持自己的边界，聊得来再靠近','freedom'], ['快速认识有意思的人，交换新信息','ambition']]],
+      ['你对一座城市的美食期待是？', [['干净稳定，常去也不踩雷','order'], ['热乎实在，吃完心里暖','warmth'], ['能在风景里慢慢吃、慢慢聊','freedom'], ['选择足够多，随时能发现新品','vitality']]],
+      ['遇到生活里突然的变化，你会？', [['先重新整理安排，尽快恢复秩序','order'], ['找可信的人商量，一起想办法','warmth'], ['把它当作打开新路线的机会','freedom'], ['越有挑战越兴奋，想抢先试试','ambition']]],
+      ['你最舒服的生活节奏是？', [['清晰有序，忙但不乱','order'], ['有来有往，关系里有回应','warmth'], ['慢一点，留足独处和呼吸的空白','freedom'], ['丰富密集，总有新鲜事发生','vitality']]],
+      ['独处时，你最常做的事是？', [['整理思绪，为接下来做准备','order'], ['给在乎的人发条消息','warmth'], ['听歌、发呆或走到自然里','freedom'], ['翻旧照片或读一段让人有共鸣的文字','depth']]],
+      ['夜晚的城市里，哪种声音最让你安心？', [['规律的车流与远处的报站声','order'], ['饭馆的碰杯声和熟人聊天声','warmth'], ['风吹树叶或潮水拍岸的声音','freedom'], ['一座老城入夜后安静下来的回声','depth']]],
+      ['哪句话最像你的城市生活宣言？', [['把日子过得井井有条，就是我的浪漫。','order'], ['有人一起吃饭，哪里都像家。','warmth'], ['不赶路，去感受路本身。','freedom'], ['世界很大，我想一直向前看看。','ambition']]]
+    ];
+
+    const cityProfile = (name, avatar, role, tags, quote, strength, reason, easter, weights) => ({ name, avatar, role, tags, quote, strength, reason, easter, weights });
+    const cityQuizzes = {
+      hometown: {
+        title: '你的灵魂老家在哪座城市', tip: '城市气质 · 凭第一反应作答', resultLabel: '你的灵魂老家是',
+        profiles: [
+          cityProfile('成都', '蓉', '松弛人情派', ['松弛温暖', '会享受', '重情义'], '你的灵魂需要热气腾腾的人间，也需要不慌不忙的自由。', '你能把日子过出温度，也会让身边的人放松下来。', '你的选择始终在寻找有人情味、能自在呼吸的生活方式。', '彩蛋：你对“先吃饭，再解决问题”这件事，大概有天然信任。', { warmth: 1.4, freedom: 1.2, vitality: .8 }),
+          cityProfile('上海', '沪', '精致进取派', ['效率审美', '目标明确', '边界清晰'], '你可以温柔地生活，也可以漂亮地赢。', '你擅长把眼光、行动力和生活品位放在同一条轨道上。', '你看重成长与效率，也愿意为自己想要的生活认真投入。', '彩蛋：再忙的时候，你也会给“质感”留一个位置。', { ambition: 1.4, order: 1.1, vitality: .9 }),
+          cityProfile('厦门', '鹭', '海风治愈派', ['自在敏感', '温柔坚定', '亲近自然'], '你不是逃离喧嚣，只是知道灵魂需要看得见海。', '你能从细小的风景里充电，并守住自己的舒适边界。', '你的答案偏向自由、感受与慢慢建立的亲近关系。', '彩蛋：一阵海风、一杯冰饮，就能把你的情绪校准。', { freedom: 1.4, depth: 1.1, warmth: .9 }),
+          cityProfile('北京', '京', '开阔理想派', ['格局感', '行动力', '有主见'], '你心里装得下远方，也愿意为了目标走很长的路。', '你擅长在复杂环境里找到方向，把压力化作向上的推力。', '你的选择展现出对成长、视野和长期目标的在意。', '彩蛋：你不怕大场面，反而容易被“大问题”点燃。', { ambition: 1.3, depth: 1.1, order: .9 }),
+          cityProfile('西安', '安', '长安故事派', ['念旧有根', '沉稳可靠', '重情重义'], '你喜欢的不是浮光掠影，而是能被岁月慢慢说清的故事。', '你有很强的内在稳定感，懂得珍惜关系与长期价值。', '你更看重厚度、秩序与人情之间经得起时间的连接。', '彩蛋：你对一顿正经饭和一段老故事，往往格外没有抵抗力。', { depth: 1.4, order: 1, warmth: 1 }),
+          cityProfile('重庆', '渝', '热烈江湖派', ['真性情', '生命力强', '敢爱敢恨'], '你的灵魂天生带点坡度：越往上走，越觉得痛快。', '你能把难题过成故事，也有把普通日子点燃的感染力。', '你偏爱热烈、直接与不拐弯的真实，关系里也很讲义气。', '彩蛋：你说“没事”的时候，多半已经准备好翻过下一座坡。', { vitality: 1.4, freedom: 1.1, warmth: 1 })
+        ]
+      },
+      settle: {
+        title: '哪座城市最适合你定居', tip: '定居偏好 · 想象长期生活的自己', resultLabel: '最适合你定居的城市是',
+        profiles: [
+          cityProfile('杭州', '杭', '平衡生长派', ['温和上进', '审美在线', '懂得平衡'], '你适合一座既能认真奋斗，也允许认真生活的城市。', '你能在稳定与成长之间找到长期舒服的平衡点。', '你既需要清晰的生活秩序，也期待有自然、审美和持续成长。', '彩蛋：你理想的一天，应该有认真工作，也有沿湖散步。', { order: 1.1, depth: 1, freedom: .9, ambition: .8 }),
+          cityProfile('苏州', '苏', '细水长流派', ['精致安稳', '感受细腻', '长期主义'], '你要的不是轰轰烈烈，而是处处有分寸的长久。', '你擅长把稳定的日子经营得有细节、有质感。', '你的选择偏向秩序、温度与安静的深度，适合慢慢扎根。', '彩蛋：你会把一家常去的店，吃成自己生活的一部分。', { depth: 1.2, order: 1.1, warmth: 1 }),
+          cityProfile('成都', '蓉', '自在安居派', ['生活感强', '松弛治愈', '关系丰盈'], '你适合把“过得舒服”当作正经人生目标。', '你知道怎样让忙碌不吞没生活，也善于经营亲密关系。', '你需要一座有人情味、节奏不逼迫、随时能好好吃饭的城市。', '彩蛋：你的定居 KPI 里，大概一定有“附近要有好吃的”。', { warmth: 1.3, freedom: 1.2, vitality: .9 }),
+          cityProfile('深圳', '深', '未来行动派', ['执行力强', '适应力高', '持续进阶'], '你适合把新的可能，过成日常。', '你对变化有很高的耐受力，也善于在快节奏里升级自己。', '你的答案显示你需要效率、机会和不断向前的环境。', '彩蛋：当别人问“会不会太快”，你可能已经在研究下一步。', { ambition: 1.5, order: 1, vitality: 1 }),
+          cityProfile('青岛', '青', '海岸从容派', ['清爽理性', '边界清楚', '松弛有度'], '你适合有海风、有秩序，也有恰到好处距离感的生活。', '你能独立把日子安排好，也懂得为自己留出呼吸空间。', '你同时在意生活效率和自然感，不喜欢过度拥挤的节奏。', '彩蛋：对你来说，走到海边可能比刷十分钟短视频更解压。', { freedom: 1.2, order: 1.1, depth: 1 }),
+          cityProfile('大理', '理', '旷野自洽派', ['精神自由', '感受优先', '慢而清醒'], '你适合先把自己安顿好，再和世界好好相处。', '你有稳定的内在节奏，不必总靠外界的速度证明自己。', '你的答案反复指向自由、自然与内心感受，适合给灵魂留白。', '彩蛋：你可能不拒绝努力，但拒绝把人生只过成赶路。', { freedom: 1.5, depth: 1.1, warmth: .8 })
+        ]
+      },
+      lover: {
+        title: '你的宿命恋人来自哪个城市', tip: '心动偏好 · 选择让你舒服的相处方式', resultLabel: '你的宿命恋人像来自',
+        profiles: [
+          cityProfile('南京', '宁', '克制深情派', ['细腻稳重', '慢热长情', '有分寸'], '你的心动，往往来自不喧哗却持续的在意。', '你会被有深度、会倾听、能给人稳定感的伴侣打动。', '你偏爱温柔而不黏腻、靠谱而不无趣的关系节奏。', '彩蛋：比起轰轰烈烈的表白，你更记得对方默默做到的小事。', { depth: 1.3, warmth: 1.1, order: .9 }),
+          cityProfile('成都', '蓉', '烟火陪伴派', ['热情松弛', '会照顾人', '情绪价值高'], '你需要的不是完美恋人，是愿意和你一起把日子过热乎的人。', '你容易被自然、真诚、懂得陪伴的人吸引。', '你的选择更看重关系里的轻松、人情味与及时回应。', '彩蛋：对方愿意陪你认真吃顿饭，已经很加分。', { warmth: 1.4, freedom: 1.1, vitality: .8 }),
+          cityProfile('上海', '沪', '势均力敌派', ['独立清醒', '彼此成就', '品位默契'], '你想要的爱情，是两个人都闪闪发光，还愿意并肩。', '你会被有目标、有边界、能彼此欣赏的人吸引。', '你需要关系带来成长与默契，而不是互相消耗。', '彩蛋：你最心动的约会，可能是聊完各自的未来依然很笃定。', { ambition: 1.3, order: 1, vitality: .9 }),
+          cityProfile('厦门', '鹭', '海风温柔派', ['浪漫自然', '尊重边界', '治愈陪伴'], '你的理想恋爱，要有海风一样的松弛与不打扰。', '你会被敏感、温柔、愿意理解你独处需求的人吸引。', '你的答案在寻找自由与亲密并存的关系，不需要时时刻刻黏在一起。', '彩蛋：能一起安静看风景的人，对你有特别的魔力。', { freedom: 1.3, depth: 1.1, warmth: .9 }),
+          cityProfile('重庆', '渝', '热烈直球派', ['真诚直接', '护短仗义', '热情洋溢'], '你会被那个敢把喜欢说出口、也把你放在行动里的人击中。', '你需要热烈的回应和真实的情绪，不爱猜来猜去。', '你的选择表明你欣赏有生命力、讲义气又敢表达的人。', '彩蛋：对方一句“我来”，可能比一百句情话更让你心动。', { vitality: 1.4, freedom: 1, warmth: 1 }),
+          cityProfile('西安', '安', '可靠守候派', ['重承诺', '有根有据', '长久安心'], '你要的爱，是风雨里也不缺席的那份笃定。', '你会被有责任感、尊重传统又愿意认真经营关系的人吸引。', '你的答案指向安全感、长期投入和经得住时间的陪伴。', '彩蛋：你对“说到做到”的好感度，远高于甜言蜜语。', { depth: 1.3, order: 1, warmth: 1 })
+        ]
+      },
+      northsouth: {
+        title: '测你骨子里是南方还是北方人格', tip: '地域底色 · 看看你的内在生活感', resultLabel: '你骨子里的地域人格是',
+        profiles: [
+          cityProfile('江南水乡型', '江', '细腻秩序派', ['含蓄审美', '讲究分寸', '感受丰沛'], '你是南方烟雨里长出的细腻灵魂，安静但不单薄。', '你对细节与氛围有天然感知力，善于经营有质感的生活。', '你在意秩序、温度和情绪里的微妙分寸。', '彩蛋：你不一定话多，但总能察觉气氛里最细小的变化。', { depth: 2.5, order: .9, warmth: .9 }),
+          cityProfile('岭南活力型', '岭', '务实开放派', ['会生活', '适应力强', '热情务实'], '你骨子里既有生意人的灵活，也有把日子过好的聪明。', '你很会在现实与享受间找平衡，包容又不失行动力。', '你的选择显示你重效率、人情，也喜欢开放多元的生活。', '彩蛋：一顿好吃的，足以让你对今天重新充满好感。', { vitality: 1.2, freedom: 1, ambition: 1, warmth: .8 }),
+          cityProfile('北方旷野型', '北', '坦荡行动派', ['直来直往', '格局开阔', '敢担事'], '你身上有北风一样的利落：心里有数，话也说得明白。', '你适合更大的舞台，面对挑战时反而能激起斗志。', '你重视目标、效率和清晰的规则，也不怕直接表达立场。', '彩蛋：比起绕弯子，你更喜欢一句“咱就这么办”。', { ambition: 1.3, order: 1, vitality: 1 }),
+          cityProfile('中原厚土型', '中', '稳重守成派', ['可靠踏实', '念旧重义', '内心坚定'], '你不一定抢在最前面，却总能成为大家最放心的底。', '你的稳定感、责任感和长期耐心，是很珍贵的力量。', '你在意根基、承诺和真实可持续的关系与生活。', '彩蛋：你可能不爱夸张表达，但关键时刻从不掉链子。', { depth: .8, order: 1.3, warmth: 1.3 }),
+          cityProfile('川渝江湖型', '川', '松弛热烈派', ['爱憎分明', '幽默通透', '重情义'], '你是能把苦日子也过出辣味和笑声的人。', '你有强大的情绪复原力，也会把朋友和热爱放在重要位置。', '你在答案里追求自由、热烈与真诚的人际连接。', '彩蛋：再难的事，和你聊着聊着也像能找出解法。', { warmth: 1.2, freedom: 1.1, vitality: 1.1 }),
+          cityProfile('海派摩登型', '海', '独立进阶派', ['清醒自律', '高效审美', '持续成长'], '你对自己的人生有一张隐形的路线图，还留着随时更新的空白。', '你有很强的自主驱动力，懂得用行动换取更大的选择权。', '你需要节奏感、机会和新鲜信息，享受不断升级的过程。', '彩蛋：你的“随便看看”，往往最后会变成一份详细收藏夹。', { freedom: .8, ambition: 1.4, depth: 1, order: .8 })
+        ]
+      },
+      vibe: {
+        title: '哪座城市和你的气质天生相合', tip: '个人气场 · 找到最像你的城市名片', resultLabel: '和你气质天生相合的城市是',
+        profiles: [
+          cityProfile('北京', '京', '大气锋芒派', ['有野心', '有主见', '扛得住事'], '你适合一座允许人有野心，也能容纳复杂理想的城市。', '你越面对更大的课题，越容易激发出自己的行动能量。', '你的气质里有目标感、思考深度和清晰的行动逻辑。', '彩蛋：你很可能把“想做点大事”当作一个再正常不过的念头。', { ambition: 1.4, depth: 1.1, order: 1 }),
+          cityProfile('苏州', '苏', '清雅留白派', ['克制高级', '温柔坚定', '耐心长情'], '你不追求声量最大，但在细节里自有不可替代的光。', '你擅长把感受力转成生活的审美和长久的关系。', '你与安静、秩序、有故事感的空间特别同频。', '彩蛋：你会注意到别人忽略的光影、香气和一句没说完的话。', { depth: 1.3, order: 1.1, warmth: .9 }),
+          cityProfile('重庆', '渝', '浓烈鲜活派', ['真性情', '有感染力', '越挫越勇'], '你的人生不必平坦，起伏反而让你显得更鲜活。', '你能用热情感染他人，也能在难处里长出不服输的劲。', '你偏爱有温度、有坡度、有真实表达的生活。', '彩蛋：你可能是朋友圈里那个“走，去试试”的发起人。', { vitality: 1.5, freedom: 1.1, warmth: .9 }),
+          cityProfile('广州', '穗', '烟火实力派', ['务实豁达', '会享受', '低调能干'], '你最厉害的地方，是能把理想落进一碗热汤和一份实在的生活里。', '你既能搞定现实问题，也不会忘记给自己留一点快乐。', '你的答案展现出开放、务实与重人情的生命力。', '彩蛋：你不爱空谈，但很擅长把生活安排得有滋有味。', { vitality: 1.2, warmth: 1.1, ambition: 1 }),
+          cityProfile('大连', '连', '清醒海风派', ['独立通透', '清爽克制', '有边界感'], '你像北方海岸的风：清醒、干净，也足够自在。', '你擅长独处和自我整理，不会轻易被外界的嘈杂带跑。', '你需要自然感、清楚边界与适度秩序共存的生活。', '彩蛋：你恢复能量的方式，往往比别人想象得安静。', { freedom: 1.2, order: 1.1, depth: 1 }),
+          cityProfile('昆明', '昆', '春日自洽派', ['松弛乐观', '随遇而安', '感知幸福'], '你适合一座四季都提醒你：人生不必总在赶路。', '你能在平常日子里发现小确幸，也很懂得保护内在节奏。', '你的气质更靠近自由、感受与不紧绷的温柔生命力。', '彩蛋：对你来说，晒晒太阳、看看花就足够重启一天。', { freedom: 1.4, depth: 1, warmth: .9 })
+        ]
+      }
+    };
+
+    const relationshipQuestions = [
+      ['喜欢一个人时，你最自然的表达是？', [['认真记住对方说过的小事','warmth'], ['直接制造心动和惊喜','vitality'], ['分享内心最真实的想法','depth'], ['给彼此足够的自由空间','freedom']]],
+      ['关系出现小摩擦时，你通常会？', [['先把问题和解决办法讲清楚','order'], ['先照顾彼此情绪再沟通','warmth'], ['想知道彼此真正介意的是什么','depth'], ['暂时冷静一下，晚点再聊','freedom']]],
+      ['哪种约会最让你心动？', [['两个人一起完成一件有意义的事','ambition'], ['慢慢吃饭聊天，什么都不用赶','warmth'], ['临时出发去陌生地方冒险','vitality'], ['在安静的夜里聊很深的话题','depth']]],
+      ['你认为安全感更多来自？', [['稳定的回应和被放在心上','warmth'], ['彼此有清晰的规则和承诺','order'], ['双方都能独立成长','ambition'], ['允许做真实的自己','freedom']]],
+      ['收到恋人的消息很晚才回复，你会？', [['理性判断他可能在忙，先做自己的事','order'], ['关心问一句是不是遇到麻烦','warmth'], ['会有点失落，想确认他的心意','depth'], ['不追问，尊重各自节奏','freedom']]],
+      ['你最欣赏恋人身上的品质？', [['靠谱，说到做到','order'], ['温柔体贴，有共情力','warmth'], ['有自己的理想和行动力','ambition'], ['有趣勇敢，让生活不无聊','vitality']]],
+      ['理想的相处状态是？', [['分工默契，把生活经营好','order'], ['无话不谈，互相照顾','warmth'], ['灵魂共鸣，懂彼此没说出口的话','depth'], ['并肩前行，也各自保有天地','freedom']]],
+      ['你更想收到哪种礼物？', [['实用且刚好解决我的需要','order'], ['手写的、有专属回忆的东西','depth'], ['一趟惊喜小旅行','vitality'], ['支持我去学新技能或追目标','ambition']]],
+      ['如果恋人遇到低谷，你会？', [['陪他把现实问题一件件理出来','order'], ['不急着说教，先陪着他','warmth'], ['和他聊聊心里真正害怕的事','depth'], ['带他换个环境，重新找回能量','vitality']]],
+      ['你最不能接受的关系状态是？', [['长期失约、没有责任感','order'], ['冷漠敷衍、情绪不被看见','warmth'], ['无法坦诚，永远隔着一层','depth'], ['彼此控制，失去自己的生活','freedom']]],
+      ['一段关系让你更愿意留下的原因是？', [['能一起规划现实的未来','ambition'], ['日常里被认真偏爱','warmth'], ['有理解和深度的连接','depth'], ['相处轻松，彼此都很自在','freedom']]],
+      ['哪句话最像你的爱情观？', [['爱是一起把生活过稳。','order'], ['爱是“我懂你，也在这里”。','warmth'], ['爱是看见彼此的灵魂。','depth'], ['爱是选择彼此，而不是占有彼此。','freedom']]]
+    ];
+    const innerQuestions = [
+      ['面对一项新挑战，你通常会？', [['先搭好方法和节奏再开始','order'], ['找伙伴一起推进','warmth'], ['凭好奇心先去试试看','freedom'], ['立刻瞄准目标，全力冲刺','ambition']]],
+      ['别人最常来找你帮什么忙？', [['梳理问题、做计划','order'], ['倾诉情绪、找安慰','warmth'], ['出主意、打开新视角','freedom'], ['推进项目、拿到结果','ambition']]],
+      ['什么时候你最有能量？', [['混乱被我整理得井井有条时','order'], ['让一个人重新开心起来时','warmth'], ['灵感冒出来、可以自由表达时','freedom'], ['目标被我一点点拿下时','ambition']]],
+      ['进入陌生环境，你会先？', [['观察规则和流程','order'], ['感受谁需要被照顾','warmth'], ['寻找有趣的人和新鲜信息','vitality'], ['识别机会和关键资源','ambition']]],
+      ['你最相信哪种成长方式？', [['日复一日地练习和复盘','order'], ['从关系与体验中学习','warmth'], ['不断探索，允许自己绕路','freedom'], ['设定更高目标，逼自己突破','ambition']]],
+      ['需要独处时，你会？', [['整理桌面和思绪','order'], ['回想重要的人和关系','warmth'], ['阅读、创作或放空','depth'], ['为下一阶段做准备','ambition']]],
+      ['一份工作最吸引你的是？', [['有清晰的系统和专业壁垒','order'], ['能和人建立真实连接','warmth'], ['有创造空间和自主性','freedom'], ['能看到成长速度和影响力','ambition']]],
+      ['遇到挫折后，你倾向于？', [['复盘原因，调整策略','order'], ['找人聊聊，恢复情绪','warmth'], ['换个角度，把它变成新体验','freedom'], ['不服输，继续挑战更高目标','vitality']]],
+      ['朋友会怎样形容你的底色？', [['稳定可靠','order'], ['温柔有共情','warmth'], ['有趣且有灵气','freedom'], ['有野心也有行动力','ambition']]],
+      ['你最容易被什么打动？', [['高质量的细节与专业感','order'], ['真诚善意的瞬间','warmth'], ['不被定义的自由表达','freedom'], ['一个人拼尽全力的样子','vitality']]],
+      ['你希望多年后的自己？', [['有自己的秩序与底气','order'], ['身边有丰厚的爱与连接','warmth'], ['仍然好奇、自由、有创造力','depth'], ['做成真正想做的大事','ambition']]],
+      ['此刻最贴近你的愿望是？', [['把生活重新理顺','order'], ['被好好理解，也理解别人','warmth'], ['去一个新地方找灵感','freedom'], ['开始一件值得拼尽全力的事','vitality']]]
+    ];
+    const profileSet = entries => entries.map(([name, avatar, role, tag, dimension]) => cityProfile(
+      name, avatar, role, [tag, '直觉驱动', '独特表达'],
+      `你的答案反复指向「${tag}」这份内在力量。`,
+      `隐藏优势：你能把${tag}变成稳定、可被看见的行动与影响。`,
+      `匹配理由：在关键选择里，你更看重与「${tag}」相关的感受和路径。`,
+      `趣味彩蛋：当你顺着这份特质行动时，常常比想象中更有力量。`,
+      { [dimension]: 1.7 }
+    ));
+    const makeQuiz = (title, tip, resultLabel, entries, questions, topics) => ({ title, tip, resultLabel, profiles: profileSet(entries), questions, topics });
+    Object.assign(cityQuizzes, {
+      lovePersonality: makeQuiz('测你的恋爱人格', '恋爱人格 · 选择最像你的相处方式', '你的恋爱人格是', [['安全感建造者','稳','踏实经营派','稳定可靠','order'],['治愈陪伴者','暖','温柔共情派','细腻陪伴','warmth'],['灵魂共鸣者','知','深度连接派','灵魂共鸣','depth'],['自由共生者','风','松弛边界派','独立自在','freedom'],['势均力敌者','衡','共同成长派','彼此成就','ambition'],['热烈直球者','燃','心动行动派','热情坦率','vitality']], relationshipQuestions, ['心动方式','相处模式','关系期待']),
+      loveAttract: makeQuiz('你容易吸引什么样的恋人', '情感磁场 · 看看谁会被你吸引', '你容易吸引的恋人类型是', [['可靠守护型','守','长期陪伴者','安稳感','order'],['温柔细腻型','柔','情绪共鸣者','温柔感','warmth'],['灵魂知己型','知','深度交流者','理解感','depth'],['洒脱有趣型','趣','自由探索者','轻松感','freedom'],['优秀上进型','进','并肩成长者','目标感','ambition'],['热烈主动型','耀','高能量心动者','感染力','vitality']], relationshipQuestions, ['吸引力','心动信号','关系磁场']),
+      loveFlaw: makeQuiz('你的恋爱隐藏短板', '关系提醒 · 温柔看见容易卡住的地方', '你在恋爱中最该留意的是', [['过度承担型','担','把一切扛在身上','控制节奏','order'],['太会迁就型','让','总把对方放前面','照顾他人','warmth'],['想得太深型','思','容易反复确认心意','敏感深情','depth'],['回避压力型','逃','需要更多表达而非退开','需要空间','freedom'],['目标优先型','忙','别把爱排在待办最后','成长驱动','ambition'],['上头太快型','燃','让心动多一点观察期','热烈真诚','vitality']], relationshipQuestions, ['情绪反应','关系边界','心动节奏']),
+      loveCouple: makeQuiz('情侣适配度测试', '相处默契 · 不诊断，只找舒服的相处节奏', '你最适配的关系模式是', [['生活合伙人型','合','稳定协作关系','默契分工','order'],['治愈港湾型','港','温柔陪伴关系','情绪回应','warmth'],['灵魂搭子型','灵','深聊共鸣关系','深度理解','depth'],['双向自由型','翼','独立共生关系','自由边界','freedom'],['成长拍档型','并','并肩升级关系','共同目标','ambition'],['冒险同盟型','玩','热烈探索关系','新鲜心动','vitality']], relationshipQuestions, ['默契来源','关系期待','相处节奏']),
+      loveScript: makeQuiz('你的理想恋爱剧本', '恋爱剧本 · 选出你想拥有的故事感', '你的理想恋爱剧本是', [['细水长流','长','日常治愈剧','安稳日常','order'],['双向奔赴','赴','温柔成长剧','认真偏爱','warmth'],['命定知己','知','灵魂共鸣剧','深度连接','depth'],['一起远走','远','自由公路剧','共同探索','freedom'],['顶峰相见','峰','势均力敌剧','彼此成就','ambition'],['热烈心动','燃','高糖冒险剧','炽热表达','vitality']], relationshipQuestions, ['故事氛围','关系想象','心动结局']),
+      talentHidden: makeQuiz('你的隐藏天赋测试', '能力线索 · 找到你自然会做好的事', '你的隐藏天赋是', [['系统规划力','策','结构思维者','系统感','order'],['共情连接力','暖','关系赋能者','共情力','warmth'],['洞察表达力','观','深度创作者','洞察力','depth'],['创意探索力','新','灵感开拓者','创造力','freedom'],['目标推进力','进','行动领航者','执行力','ambition'],['气氛点燃力','燃','能量发动机','感染力','vitality']], innerQuestions, ['能力偏好','行动方式','成长路径']),
+      talentSin: makeQuiz('七宗罪人格测试', '趣味投射 · 只看欲望偏好，不作道德评判', '你最明显的欲望人格是', [['傲慢型','傲','自我标准高','自我要求','ambition'],['贪婪型','求','渴望掌控更多可能','资源敏感','order'],['暴怒型','怒','底线感极强','行动爆发','vitality'],['嫉妒型','镜','对比较非常敏锐','自我洞察','depth'],['懒惰型','缓','渴望低耗能生活','自由留白','freedom'],['暴食型','享','懂得追逐感官快乐','情绪满足','warmth']], innerQuestions, ['欲望偏好','情绪开关','内在驱动']),
+      talentColor: makeQuiz('你的性格底色测试', '人格底色 · 不止一个标签的你', '你的性格底色是', [['秩序蓝','蓝','冷静可靠型','理性稳定','order'],['治愈绿','绿','温柔共情型','温柔连接','warmth'],['深海紫','紫','敏锐思考型','深度感知','depth'],['晴空白','白','自由灵感型','自由表达','freedom'],['锋芒金','金','目标行动型','向上突破','ambition'],['火焰红','红','热烈感染型','生命热度','vitality']], innerQuestions, ['内在气质','日常偏好','情绪底色']),
+      talentTrack: makeQuiz('你的天赋适合什么赛道', '潜能赛道 · 发现更能发挥你的方向', '你的天赋赛道更像', [['策略与运营','策','系统型赛道','规划能力','order'],['沟通与服务','暖','人际型赛道','共情能力','warmth'],['内容与研究','研','洞察型赛道','深度表达','depth'],['创意与设计','创','创造型赛道','灵感探索','freedom'],['商业与管理','赢','目标型赛道','推进能力','ambition'],['舞台与营销','光','感染型赛道','能量表达','vitality']], innerQuestions, ['工作偏好','价值驱动','能力优势']),
+      talentSubconscious: makeQuiz('你的潜意识人格', '潜意识投射 · 让第一反应替你回答', '你的潜意识人格是', [['内在建筑师','筑','秩序掌控者','建立秩序','order'],['心灵照看者','灯','情绪守护者','照亮他人','warmth'],['深夜观察家','夜','意义探索者','感知真相','depth'],['旷野旅人','野','自由探索者','追随直觉','freedom'],['登峰者','峰','目标追逐者','自我突破','ambition'],['火种玩家','火','生命体验者','点燃当下','vitality']], innerQuestions, ['潜意识','内在需要','真实选择']),
+      funStory: makeQuiz('你的人生隐藏剧本', '人生剧本 · 把日常过成自己的主线', '你的人生隐藏剧本是', [['逆袭成长线','升','进阶主角','稳步升级','order'],['治愈群像线','暖','关系主角','温柔连接','warmth'],['悬疑探索线','谜','洞察主角','寻找意义','depth'],['公路自由线','路','冒险主角','自在前行','freedom'],['事业燃爽线','赢','目标主角','突破上限','ambition'],['热血喜剧线','燃','能量主角','快乐感染','vitality']], innerQuestions, ['人生主线','角色能量','故事转折']),
+      funAnimal: makeQuiz('你是什么小动物人格', '动物人格 · 找到和你同频的小伙伴', '你的小动物人格是', [['海狸','狸','秩序建造者','踏实可靠','order'],['金毛','狗','温暖陪伴者','真诚友好','warmth'],['猫咪','猫','深度观察者','敏锐独立','depth'],['海鸥','鸥','自由探索者','轻盈洒脱','freedom'],['猎豹','豹','目标行动者','迅速果断','ambition'],['小狐狸','狐','灵动气氛组','聪明有趣','vitality']], innerQuestions, ['小动物气质','日常反应','能量来源']),
+      funVibe: makeQuiz('你的专属氛围感标签', '氛围标签 · 给你的气质一个名字', '你的专属氛围感是', [['清冷秩序感','序','高级极简派','清醒克制','order'],['奶油治愈感','暖','温柔舒适派','柔软温度','warmth'],['深夜电影感','夜','故事感氛围派','神秘深邃','depth'],['旷野松弛感','风','自由呼吸派','自在松弛','freedom'],['都市锋芒感','锋','目标感氛围派','干练向上','ambition'],['落日热烈感','霞','生命力氛围派','明亮鲜活','vitality']], innerQuestions, ['审美气质','氛围偏好','第一印象']),
+      funPace: makeQuiz('你适合什么样的生活节奏', '生活节奏 · 寻找让你舒服的速度', '你适合的生活节奏是', [['规律充实型','序','计划感生活','稳定推进','order'],['人情滋养型','暖','关系感生活','温柔相伴','warmth'],['慢感受型','静','沉浸式生活','深度留白','depth'],['自由流动型','风','弹性式生活','随性探索','freedom'],['高速成长型','进','冲刺式生活','目标驱动','ambition'],['高能体验型','燃','热闹式生活','鲜活体验','vitality']], innerQuestions, ['日常节奏','能量补给','生活方式']),
+      funMission: makeQuiz('你的人生主线任务测试', '主线任务 · 这次轮到你做主角', '你的人生主线任务是', [['建立自己的秩序','筑','人生架构师','稳住根基','order'],['把爱传递出去','暖','关系治愈师','连接他人','warmth'],['寻找真正的答案','寻','意义探索者','看见本质','depth'],['体验更大的世界','远','自由旅行者','打开边界','freedom'],['完成一件大事','峰','目标挑战者','持续突破','ambition'],['点燃每个当下','光','快乐制造者','热爱生活','vitality']], innerQuestions, ['主线愿望','人生能量','未来方向']),
+      boxRandom: makeQuiz('随机抽取一个测试方向', '灵魂盲盒 · 交给第一反应抽签', '今天为你抽到的灵魂关键词是', [['整理','序','秩序盲盒','重启节奏','order'],['拥抱','暖','温度盲盒','连接关系','warmth'],['沉潜','深','洞察盲盒','听见内心','depth'],['出发','风','自由盲盒','尝试新路','freedom'],['突破','峰','行动盲盒','冲向目标','ambition'],['玩耍','燃','快乐盲盒','点亮当下','vitality']], innerQuestions, ['盲盒抽签','直觉选择','今日提示']),
+      boxToday: makeQuiz('今天最适合测什么', '今日指引 · 用轻松方式读懂当下', '今天最适合你的测试主题是', [['整理生活','序','效率整理局','恢复秩序','order'],['关照关系','暖','情感充电局','感受陪伴','warmth'],['听见内心','深','自我探索局','慢慢思考','depth'],['去点新鲜','风','探索体验局','自由尝试','freedom'],['启动目标','进','成长行动局','推进计划','ambition'],['给自己放假','燃','快乐回血局','感受热闹','vitality']], innerQuestions, ['今日状态','能量方向','轻松提示']),
+      boxWeek: makeQuiz('你的本周能量关键词', '本周能量 · 不预测，只给你一个好玩的提醒', '你的本周能量关键词是', [['稳住','稳','秩序能量','稳定输出','order'],['靠近','暖','关系能量','温柔连接','warmth'],['沉淀','深','洞察能量','安静思考','depth'],['松开','风','自由能量','放松呼吸','freedom'],['冲刺','进','目标能量','勇敢推进','ambition'],['发光','燃','热烈能量','开心表达','vitality']], innerQuestions, ['本周能量','第一反应','轻松提醒']),
+      boxShare: makeQuiz('适合分享给朋友的测试', '好友互动 · 看看你最适合分享哪种答案', '你最适合分享的测试氛围是', [['靠谱搭子局','稳','默契协作题','靠谱感','order'],['友谊治愈局','暖','温柔陪伴题','温度感','warmth'],['深夜聊天局','夜','灵魂共鸣题','故事感','depth'],['旅行出发局','风','自由冒险题','新鲜感','freedom'],['一起变强局','进','成长挑战题','目标感','ambition'],['快乐整活局','燃','搞笑能量题','生命力','vitality']], innerQuestions, ['好友互动','分享气质','快乐开关']),
+      boxNight: makeQuiz('夜晚专属的灵魂问题', '夜晚提问 · 给现在的你一点安静空间', '夜晚的你更需要', [['重新整理','序','清醒整理局','安顿生活','order'],['被好好拥抱','暖','温柔陪伴局','情绪回应','warmth'],['与自己对话','夜','深度独处局','内心答案','depth'],['暂时逃离','风','自由呼吸局','松开压力','freedom'],['确认方向','峰','目标确认局','继续向前','ambition'],['快乐释放','燃','热烈回能局','重新点亮','vitality']], innerQuestions, ['夜晚情绪','内在需要','安静回答'])
+    });
+
+    let activeCityQuiz = null;
     let current = 0;
     let answers = Array(questions.length).fill(null);
     const $ = id => document.getElementById(id);
@@ -207,7 +377,10 @@
       const [text, options] = questions[current];
       $('counter').textContent = `${String(current + 1).padStart(2, '0')} / ${questions.length}`;
       $('progress-bar').style.width = `${((current + 1) / questions.length) * 100}%`;
-      $('question-kicker').textContent = ['日常习惯', '处事方式', '社交模式', '情绪反应', '兴趣偏好'][current % 5] + ' · 请选择更像你的答案';
+      const cityTopics = ['生活节奏', '城市观察', '居住偏好', '情绪充电', '旅行方式'];
+      const activeTopics = activeCityQuiz?.topics || cityTopics;
+      $('dimension-tip').textContent = activeCityQuiz ? activeCityQuiz.tip : '听从你的第一反应';
+      $('question-kicker').textContent = (activeCityQuiz ? activeTopics[current % activeTopics.length] : ['日常习惯', '处事方式', '社交模式', '情绪反应', '兴趣偏好'][current % 5]) + ' · 请选择更像你的答案';
       $('question-text').textContent = text;
       $('options').innerHTML = options.map(([label], index) => `<button class="option ${answers[current] === index ? 'selected' : ''}" type="button" data-index="${index}"><b>${'ABCD'[index]}</b><span>${label}</span></button>`).join('');
       $('options').querySelectorAll('.option').forEach(btn => btn.addEventListener('click', () => { answers[current] = Number(btn.dataset.index); renderQuestion(); }));
@@ -215,14 +388,52 @@
       $('next-btn').disabled = answers[current] === null;
       $('next-btn').textContent = current === questions.length - 1 ? '查看结果' : '下一题';
     }
+    // 同一核心特质会根据具体场景分化为不同侧面。例如，面对长期布局时更接近诸葛亮；
+    // 面对人和与时机时更接近张良。这样 40 道生活题能覆盖 14 种人格原型。
+    const companionDimensions = {
+      strategy: 'tactics', leadership: 'authority', culture: 'insight', chivalry: 'blazing',
+      poetry: 'heroic', courage: 'defense', retreat: 'unbound'
+    };
+    function resolveDimension(questionIndex, optionIndex, dimension) {
+      const companion = companionDimensions[dimension];
+      if (!companion) return dimension;
+      // 偶数与奇数题目切换“内在倾向 / 外在行动”场景；选项位置让同类答案不被机械地归为一人。
+      return (questionIndex + optionIndex * 2) % 3 === 1 ? companion : dimension;
+    }
+    // 各人物在 40 题中出现的场景数并不完全相同；按可选场景数归一化，避免题目分布影响结果概率。
+    const dimensionCapacity = Object.fromEntries(Object.keys(people).map(key => [key, 0]));
+    questions.forEach(([, options], questionIndex) => options.forEach(([, dimension], optionIndex) => {
+      dimensionCapacity[resolveDimension(questionIndex, optionIndex, dimension)] += 1;
+    }));
+    const maxCapacity = Math.max(...Object.values(dimensionCapacity));
     function getResult() {
+      if (activeCityQuiz) return getCityResult();
       const scores = Object.fromEntries(Object.keys(people).map(key => [key, 0]));
-      answers.forEach((answer, qIndex) => { if (answer !== null) scores[questions[qIndex][1][answer][1]] += 1; });
+      answers.forEach((answer, qIndex) => {
+        if (answer !== null) {
+          const dimension = resolveDimension(qIndex, answer, questions[qIndex][1][answer][1]);
+          scores[dimension] += maxCapacity / dimensionCapacity[dimension];
+        }
+      });
       // 若并列，优先选择出现次数更多、且在问卷后段获得分数的维度，让结果稳定并反映近期直觉。
       const ordered = Object.entries(scores).sort((a, b) => b[1] - a[1] || tieBreak(b[0]) - tieBreak(a[0]));
       return people[ordered[0][0]];
     }
-    function tieBreak(dimension) { return answers.reduce((sum, answer, index) => sum + (answer !== null && questions[index][1][answer][1] === dimension ? index + 1 : 0), 0); }
+    function getCityResult() {
+      const scores = { order: 0, warmth: 0, freedom: 0, ambition: 0, depth: 0, vitality: 0 };
+      const capacities = { order: 0, warmth: 0, freedom: 0, ambition: 0, depth: 0, vitality: 0 };
+      questions.forEach(([, options]) => options.forEach(([, dimension]) => { capacities[dimension] += 1; }));
+      answers.forEach((answer, index) => { if (answer !== null) scores[questions[index][1][answer][1]] += 1; });
+      const maxCapacity = Math.max(...Object.values(capacities));
+      Object.keys(scores).forEach(dimension => { scores[dimension] = capacities[dimension] ? scores[dimension] * maxCapacity / capacities[dimension] : 0; });
+      const ranked = activeCityQuiz.profiles.map((profile, profileIndex) => ({
+        profile,
+        score: Object.entries(profile.weights).reduce((sum, [dimension, weight]) => sum + scores[dimension] * weight, 0),
+        profileIndex
+      })).sort((a, b) => b.score - a.score || a.profileIndex - b.profileIndex);
+      return ranked[0].profile;
+    }
+    function tieBreak(dimension) { return answers.reduce((sum, answer, index) => answer !== null && resolveDimension(index, answer, questions[index][1][answer][1]) === dimension ? sum + index + 1 : sum, 0); }
     function renderResult() {
       const person = getResult();
       $('result-avatar').textContent = person.avatar;
@@ -233,34 +444,39 @@
       $('result-strength').textContent = person.strength;
       $('result-reason').textContent = person.reason;
       $('result-easter').textContent = person.easter;
-      $('share-btn').dataset.text = `我测出了「${person.name}」型灵魂！${person.quote}\n#测测你的灵魂对应哪位中国历史人物 #趣味人格测试`;
+      $('result').querySelector('.result-label').textContent = activeCityQuiz ? activeCityQuiz.resultLabel : '你的灵魂同频者是';
+      const quizTitle = activeCityQuiz ? activeCityQuiz.title : '测测你的灵魂对应哪位中国历史人物';
+      $('share-btn').dataset.text = `我在「${quizTitle}」测出了「${person.name}」！${person.quote}\n#灵魂测试广场 #趣味人格测试`;
       showScreen('result');
     }
     function toast(message) { $('toast').textContent = message; $('toast').classList.add('show'); setTimeout(() => $('toast').classList.remove('show'), 2200); }
-    $('start-btn').addEventListener('click', () => { current = 0; answers = Array(questions.length).fill(null); renderQuestion(); showScreen('quiz'); });
+    function startHistoricalQuiz() {
+      activeCityQuiz = null;
+      questions = historicalQuestions;
+      current = 0;
+      answers = Array(questions.length).fill(null);
+      renderQuestion();
+      showScreen('quiz');
+    }
+    function startCityQuiz(id) {
+      activeCityQuiz = cityQuizzes[id];
+      questions = activeCityQuiz.questions || cityQuestions;
+      current = 0;
+      answers = Array(questions.length).fill(null);
+      renderQuestion();
+      showScreen('quiz');
+    }
+    $('start-btn').addEventListener('click', startHistoricalQuiz);
+    document.querySelectorAll('.city-btn').forEach(button => button.addEventListener('click', () => startCityQuiz(button.dataset.cityQuiz)));
+    document.querySelectorAll('.quiz-btn').forEach(button => button.addEventListener('click', () => startCityQuiz(button.dataset.quiz)));
+    document.querySelectorAll('.direction-btn:not(.live):not(.city-btn):not(.quiz-btn)').forEach(button => button.addEventListener('click', () => {
+      toast(`「${button.textContent.trim()}」正在制作中，敬请期待`);
+    }));
     $('prev-btn').addEventListener('click', () => { if (current > 0) { current--; renderQuestion(); } });
     $('next-btn').addEventListener('click', () => { if (answers[current] === null) return; if (current === questions.length - 1) renderResult(); else { current++; renderQuestion(); } });
     $('restart-btn').addEventListener('click', () => { current = 0; answers = Array(questions.length).fill(null); renderQuestion(); showScreen('quiz'); });
+    $('hall-btn').addEventListener('click', () => showScreen('home'));
     $('share-btn').addEventListener('click', async () => { const text = $('share-btn').dataset.text; try { await navigator.clipboard.writeText(text); toast('分享文案已复制，快去晒出结果吧'); } catch { window.prompt('复制这段分享文案：', text); } });
   </script>
 </body>
 </html>
-
-<script>
-Object.assign(people, {
-  tactics:{name:'张良',role:'谋略家 · 从容之局',avatar:'良',tags:['洞察人心','借势而为','进退有度'],quote:'你不抢着成为焦点，却常常看见别人没看见的那一步。',strength:'擅长从人和局势中找到杠杆点，把复杂关系理成顺势可走的路。',reason:'你在选择中展现出冷静判断与弹性处事：比起硬碰硬，更相信看清时机、选对位置。',easter:'你心里常有一句潜台词：先别急，看看真正的关键在哪里。'},
-  authority:{name:'武则天',role:'掌局者 · 定势之锋',avatar:'曌',tags:['气场坚定','判断独立','敢担结果'],quote:'你不等别人替你定义位置，你会亲手把位置坐稳。',strength:'在压力和质疑中仍能保持决断，也有能力在必要时重写自己的行动规则。',reason:'你反复表现出强烈主体感：愿意负责、不回避难题，也不轻易把命运交给环境。',easter:'别人还在讨论“该不该开始”，你已经列好了启动条件。'},
-  insight:{name:'王阳明',role:'心学家 · 知行之笃',avatar:'明',tags:['内心笃定','反思力强','说做一致'],quote:'你真正相信的答案，往往要亲自走过才算数。',strength:'能在外界噪音里回到内心判断，并把想清楚的事落到行动。',reason:'你不满足于漂亮的观点，更在意是否真实、是否能实践；会反省，也能坚定前行。',easter:'你的待办清单里，或许藏着一句备注：想明白了，就去做。'},
-  blazing:{name:'霍去病',role:'少年将星 · 破阵之速',avatar:'病',tags:['目标感强','大胆直接','不惧未知'],quote:'路再远，也不如你决定出发的那一刻锋利。',strength:'面对陌生挑战反而容易被点燃，能把“想试试”迅速变成一个干脆的开始。',reason:'你的回答里有对突破和远方的渴望，不喜欢把热情耗在犹豫里。',easter:'对你而言，“新手保护期”更像一句邀请：正好，去试一把。'},
-  heroic:{name:'辛弃疾',role:'词人 · 热血之志',avatar:'弃',tags:['情感炽烈','理想不灭','外柔内刚'],quote:'你把没说完的话，酿成了继续向前的力气。',strength:'能把遗憾、热爱和不甘转化为更深的投入与表达。',reason:'你既有细腻感受，也有不愿向现实轻易低头的劲；被触动时，最能看见你的韧性。',easter:'那句收藏的歌词或那部电影，可能在深夜给过你重新出发的力量。'},
-  defense:{name:'戚继光',role:'实干将领 · 练兵之稳',avatar:'继',tags:['务实耐心','系统执行','守护意识'],quote:'真正的底气，不在一时逞强，而在日日准备。',strength:'擅长把难题拆成可训练、可复盘的步骤，靠耐心把能力练到可靠。',reason:'你的选择显示出务实与责任感：愿意守住细节、打牢基础，也值得托付。',easter:'你会把“先练熟再上场”说得平静，但最后往往最让人放心。'},
-  unbound:{name:'嵇康',role:'名士 · 不羁之音',avatar:'康',tags:['精神独立','审美坚持','不随波逐流'],quote:'你不急着合群，你更在意灵魂有没有自己的回响。',strength:'有清晰精神边界和独特审美判断，敢拒绝不合心意的标准答案。',reason:'你的选择流露出不愿迎合的清醒，重视内在自由，也珍惜自己的节奏与表达。',easter:'所有人都追同一个热点时，你可能正安静地把手机调成勿扰。'}
-});
-const expansionPair={strategy:'tactics',leadership:'authority',culture:'insight',chivalry:'blazing',poetry:'heroic',courage:'defense',retreat:'unbound'};
-function expandedDimension(q,i,d){return expansionPair[d]&&(q+i*2)%3===1?expansionPair[d]:d;}
-const expansionCapacity=Object.fromEntries(Object.keys(people).map(k=>[k,0]));
-questions.forEach(([,os],q)=>os.forEach(([,d],i)=>expansionCapacity[expandedDimension(q,i,d)]++));
-const expansionMax=Math.max(...Object.values(expansionCapacity));
-getResult=function(){const s=Object.fromEntries(Object.keys(people).map(k=>[k,0]));answers.forEach((a,q)=>{if(a!==null){const d=expandedDimension(q,a,questions[q][1][a][1]);s[d]+=expansionMax/expansionCapacity[d];}});return people[Object.entries(s).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0][0]];};
-document.querySelector('.small-note').textContent='共 40 题 · 14 位历史人物 · 单选 · 凭第一反应即可 · 仅供趣味娱乐';
-</script>
