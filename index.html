@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -244,3 +245,22 @@
   </script>
 </body>
 </html>
+
+<script>
+Object.assign(people, {
+  tactics:{name:'张良',role:'谋略家 · 从容之局',avatar:'良',tags:['洞察人心','借势而为','进退有度'],quote:'你不抢着成为焦点，却常常看见别人没看见的那一步。',strength:'擅长从人和局势中找到杠杆点，把复杂关系理成顺势可走的路。',reason:'你在选择中展现出冷静判断与弹性处事：比起硬碰硬，更相信看清时机、选对位置。',easter:'你心里常有一句潜台词：先别急，看看真正的关键在哪里。'},
+  authority:{name:'武则天',role:'掌局者 · 定势之锋',avatar:'曌',tags:['气场坚定','判断独立','敢担结果'],quote:'你不等别人替你定义位置，你会亲手把位置坐稳。',strength:'在压力和质疑中仍能保持决断，也有能力在必要时重写自己的行动规则。',reason:'你反复表现出强烈主体感：愿意负责、不回避难题，也不轻易把命运交给环境。',easter:'别人还在讨论“该不该开始”，你已经列好了启动条件。'},
+  insight:{name:'王阳明',role:'心学家 · 知行之笃',avatar:'明',tags:['内心笃定','反思力强','说做一致'],quote:'你真正相信的答案，往往要亲自走过才算数。',strength:'能在外界噪音里回到内心判断，并把想清楚的事落到行动。',reason:'你不满足于漂亮的观点，更在意是否真实、是否能实践；会反省，也能坚定前行。',easter:'你的待办清单里，或许藏着一句备注：想明白了，就去做。'},
+  blazing:{name:'霍去病',role:'少年将星 · 破阵之速',avatar:'病',tags:['目标感强','大胆直接','不惧未知'],quote:'路再远，也不如你决定出发的那一刻锋利。',strength:'面对陌生挑战反而容易被点燃，能把“想试试”迅速变成一个干脆的开始。',reason:'你的回答里有对突破和远方的渴望，不喜欢把热情耗在犹豫里。',easter:'对你而言，“新手保护期”更像一句邀请：正好，去试一把。'},
+  heroic:{name:'辛弃疾',role:'词人 · 热血之志',avatar:'弃',tags:['情感炽烈','理想不灭','外柔内刚'],quote:'你把没说完的话，酿成了继续向前的力气。',strength:'能把遗憾、热爱和不甘转化为更深的投入与表达。',reason:'你既有细腻感受，也有不愿向现实轻易低头的劲；被触动时，最能看见你的韧性。',easter:'那句收藏的歌词或那部电影，可能在深夜给过你重新出发的力量。'},
+  defense:{name:'戚继光',role:'实干将领 · 练兵之稳',avatar:'继',tags:['务实耐心','系统执行','守护意识'],quote:'真正的底气，不在一时逞强，而在日日准备。',strength:'擅长把难题拆成可训练、可复盘的步骤，靠耐心把能力练到可靠。',reason:'你的选择显示出务实与责任感：愿意守住细节、打牢基础，也值得托付。',easter:'你会把“先练熟再上场”说得平静，但最后往往最让人放心。'},
+  unbound:{name:'嵇康',role:'名士 · 不羁之音',avatar:'康',tags:['精神独立','审美坚持','不随波逐流'],quote:'你不急着合群，你更在意灵魂有没有自己的回响。',strength:'有清晰精神边界和独特审美判断，敢拒绝不合心意的标准答案。',reason:'你的选择流露出不愿迎合的清醒，重视内在自由，也珍惜自己的节奏与表达。',easter:'所有人都追同一个热点时，你可能正安静地把手机调成勿扰。'}
+});
+const expansionPair={strategy:'tactics',leadership:'authority',culture:'insight',chivalry:'blazing',poetry:'heroic',courage:'defense',retreat:'unbound'};
+function expandedDimension(q,i,d){return expansionPair[d]&&(q+i*2)%3===1?expansionPair[d]:d;}
+const expansionCapacity=Object.fromEntries(Object.keys(people).map(k=>[k,0]));
+questions.forEach(([,os],q)=>os.forEach(([,d],i)=>expansionCapacity[expandedDimension(q,i,d)]++));
+const expansionMax=Math.max(...Object.values(expansionCapacity));
+getResult=function(){const s=Object.fromEntries(Object.keys(people).map(k=>[k,0]));answers.forEach((a,q)=>{if(a!==null){const d=expandedDimension(q,a,questions[q][1][a][1]);s[d]+=expansionMax/expansionCapacity[d];}});return people[Object.entries(s).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0][0]];};
+document.querySelector('.small-note').textContent='共 40 题 · 14 位历史人物 · 单选 · 凭第一反应即可 · 仅供趣味娱乐';
+</script>
